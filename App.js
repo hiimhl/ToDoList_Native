@@ -13,9 +13,7 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ToDo from "./ToDo";
 import { styles } from "./styles";
-
-const STORAGE_KEY = "@toDos";
-const WORK_KEY = "@work";
+import { STORAGE_KEY, WORK_KEY, saveToDos, saveWork } from "./Storage";
 
 export default function App() {
   const [working, setWorking] = useState(true);
@@ -27,28 +25,12 @@ export default function App() {
     loadData();
   }, []);
 
-  const saveWork = async (work) => {
-    try {
-      await AsyncStorage.setItem(WORK_KEY, JSON.stringify(work));
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const toggleWork = (type) => {
     type === "work" ? setWorking(true) : setWorking(false);
     saveWork(type);
   };
 
   const onChangeText = (payload) => setText(payload);
-
-  const saveToDos = async (toSave) => {
-    try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   const loadData = async () => {
     try {
@@ -106,20 +88,6 @@ export default function App() {
     );
   };
 
-  const editTodo = async (data, key) => {
-    const newToDos = { ...toDos };
-    newToDos[key].text = data;
-
-    await saveToDos(newToDos);
-  };
-
-  const completedToDo = async (key) => {
-    const newToDos = { ...toDos };
-    newToDos[key].completed = true;
-
-    await saveToDos(newToDos);
-  };
-
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -147,7 +115,9 @@ export default function App() {
         onChangeText={onChangeText}
         returnKeyType="done"
         value={text}
-        placeholder={working ? "Add a To Do" : "Where do you want to go?"}
+        placeholder={
+          working ? "할 일을 추가해 주세요." : "여행지를 추가해 주세요."
+        }
         style={styles.input}
       />
       {loading ? (
@@ -158,11 +128,11 @@ export default function App() {
             // Toggle Work or Travel
             toDos[key].working === working ? (
               <ToDo
-                data={toDos[key]}
-                dataKey={key}
+                toDo={toDos[key]}
+                toDosData={toDos}
+                key={key + working}
+                toDoKey={key}
                 deleteToDo={deleteToDo}
-                completedToDo={completedToDo}
-                editTodo={editTodo}
               />
             ) : null
           )}

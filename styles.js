@@ -52,8 +52,10 @@ export const styles = StyleSheet.create({
   },
   editBox: {
     backgroundColor: theme.text,
-    flex: 1,
+    // flex: 1,
     flexDirection: "row",
+    borderRadius: 5,
+    padding: 7,
   },
   editInput: {
     fontSize: 20,
@@ -61,7 +63,16 @@ export const styles = StyleSheet.create({
     flex: 7,
   },
   editBtn: {
-    fontSize: 18,
-    padding: 5,
+    flex: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 5,
+    marginHorizontal: 3,
+    borderRadius: 7,
+    borderColor: "black",
+  },
+  editBtnText: {
+    fontSize: 17,
+    color: theme.text,
   },
 });
